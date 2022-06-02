@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 
 let repoSchema = mongoose.Schema({
-  id: Number, // will be used to search for duplicate repos
+  id: {
+    type: Number,
+    unique: true
+  },
+  // id: Number,
   name: String,
   owner: {
     login: String,
@@ -23,10 +27,9 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (/* TODO */) => {
-  // TODO: Your code here
-  // This function should save a repo or repos to
-  // the MongoDB
+let save = (allRepos) => {
+  return Repo.insertMany(allRepos, { ordered: false })
+    .catch( err => console.log(err) )
 }
 
 module.exports.save = save;

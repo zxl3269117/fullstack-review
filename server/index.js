@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-let app = express();
 const github = require('../helpers/github.js');
-const data = require('../data.json');
+const db = require('../database/index.js');
+
+let app = express();
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
   console.log(req.body.term);
@@ -14,18 +14,37 @@ app.post('/repos', function (req, res) {
   var username = req.body.term;
   github.getReposByUsername(username)
     .then(response => {
-      console.log(response.data);
-      // sort data
+      // console.log('response data', response.data);
 
-      // return sorted data
+      // sort repos in descending order of watchers_count
+      var allRepos = response.data;
+      var sortedRepos = allRepos.sort((a, b) => {
+        if (a.watchers_count > b.watchers_count) {
+          return -1;
+        }
+        if(a.watchers_count < b.watchers_count) {
+          return 1;
+        }
+        return 0;
+      });
 
+      return sortedRepos;
     })
     .then(sortedRepos => {
       // add sortedRepos to the DB
-      // return sortedRepos.splice(0,  24)
+      db.save(sortedRepos)
+        // .then(raw => {
+        //   console.log('raw', raw);
+        // })
+        // .catch( err => {
+        //   console.log(err);
+        //   if(err.result.result.nInserted === 0) {
+
+        //   }
+        // })
+      return sortedRepos.slice(0, 5);
     })
     .then(topRepos => {
-      // send res with topRepos
       res.status(201).json(topRepos);
     })
     .catch( err => console.log(err) )
