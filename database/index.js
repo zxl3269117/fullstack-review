@@ -31,4 +31,10 @@ let save = (allRepos) => {
     .catch( err => console.log(err) )
 }
 
+let find = () => {
+  return Repo.find({})
+    // .catch( err => console.log(err) );
+}
+
 module.exports.save = save;
+module.exports.find = find;

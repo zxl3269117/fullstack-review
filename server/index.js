@@ -42,8 +42,12 @@ app.post('/repos', function (req, res) {
 
 // Handle get request to access top 25 repos stored in the database
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+  db.find()
+    .then(allRepos => {
+      console.log(allRepos);
+      var topRepos = allRepos.slice(0, 25);
+      res.status(200).json(topRepos);
+    })
 });
 
 let port = 1128;
