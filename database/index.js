@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+mongoose.connect('mongodb://localhost/fetcher', { useUnifiedTopology: true }, { useNewUrlParser: true });
 
 let repoSchema = mongoose.Schema({
   id: {
     type: Number,
     unique: true
   },
-  // id: Number,
   name: String,
   owner: {
     login: String,
@@ -16,9 +15,9 @@ let repoSchema = mongoose.Schema({
   private: Boolean,
   html_url: String,
   description: String,
-  // created_at: String,
+  created_at: String,
   updated_at: String,
-  // published_at: String,
+  published_at: String,
   size: Number,
   watchers_count: Number,
   forks_count: Number,
