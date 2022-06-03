@@ -3,13 +3,10 @@ import RepoEntry from './RepoEntry.jsx';
 
 const RepoList = (props) => {
   // console.log(props.repos);
-  var repoEntries = props.repos.map(repo => {
-    console.log(repo);
-    <li>
-      <RepoEntry repo={repo} />
-    </li>
-
-  })
+  var repoEntries = props.repos.map(repo =>
+    // console.log(repo);
+    <RepoEntry key={repo.id.toString()} repo={repo} />
+  )
   return (
     <div>
       <h4> Repo List Component </h4>
