@@ -42,6 +42,7 @@ app.post('/repos', function (req, res) {
 
 // Handle get request to access top 25 repos stored in the database
 app.get('/repos', function (req, res) {
+  console.log('received?');
   db.find()
     .then(allRepos => {
       console.log(allRepos);

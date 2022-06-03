@@ -44,9 +44,12 @@ class App extends React.Component {
 
   }
 
-  componentsDidMount() {
-    $.ajax('/repos')
+  componentDidMount() {
+    $.ajax({
+      url: '/repos'
+    })
       .done(repos => {
+        console.log(repos);
         this.setState({
           repos: repos
         })
@@ -75,8 +78,8 @@ class App extends React.Component {
   render () {
     return (<div>
       <h1>Github Fetcher</h1>
-      <RepoList repos={this.state.repos}/>
       <Search onSearch={this.search.bind(this)}/>
+      <RepoList repos={this.state.repos}/>
     </div>)
   }
 }
