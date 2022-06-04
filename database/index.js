@@ -33,16 +33,23 @@ let repoSchema = mongoose.Schema({
 let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (allRepos) => {
-  return Repo.insertMany(allRepos, { ordered: false })
-    // .catch( err => console.log(err) )
+  allRepos.forEach(repo => {
+    // console.log(repo.id);
+    Repo.updateOne(repo, repo, { upsert: true, strict: false }, (err, update) => {
+      if (err) {
+        console.log('err', err);
+      }
+    })
+  })
 }
 
+// retrieve top 25 repos with descending watcher_count
 let find = (callback) => {
   Repo.find({}, (err, allRepos) => {
     if(err) {
       callback(err, null);
     } else {
-      console.log('db get all repos', allRepos.length);
+      console.log('all repos from database', allRepos.length);
       var sortedRepos = allRepos.sort((a, b) => {
         if (a.watchers_count > b.watchers_count) {
           return -1;

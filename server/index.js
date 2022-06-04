@@ -14,34 +14,28 @@ app.post('/repos', function (req, res) {
 
   github.getReposByUsername(username)
     .then(response => {
-      console.log('response.data from github', response.data);
-      // console.log('headers from github', response.header)
       var allRepos = response.data;
-      db.save(allRepos)
-        .then(() => {
-          // retrieve top 25 repos
-          db.find((err, topRepos) => {
-            if(err) {
-              console.log(err);
-            } else {
-              console.log('get top repos from db', topRepos.length);
-              res.status(201).json(topRepos);
-            }
-          })
-        })
-        .catch( err => console.log(err) )
+      db.save(allRepos);
     })
-    .catch( err => console.log(err) )
+    .then(() => {
+      // retrieve top 25 repos
+      db.find((err, topRepos) => {
+        if(err) {
+          console.log(err);
+        } else {
+          res.status(201).json(topRepos);
+        }
+      })
+    })
+    .catch( err => console.log('err save data', err) )
 });
 
 // Handle get request to access top 25 repos stored in the database
 app.get('/repos', function (req, res) {
-  // retrieve top 25 repos
   db.find((err, topRepos) => {
     if(err) {
       console.log(err);
     } else {
-      console.log('get top repos from db', topRepos.length);
       res.status(200).json(topRepos);
     }
   })
