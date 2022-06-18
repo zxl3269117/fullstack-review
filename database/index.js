@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher', { useUnifiedTopology: true }, { useNewUrlParser: true });
 
+const db = mongoose.connection;
+db.once('open', _ => {
+  console.log('Database connected:')
+})
+
 let repoSchema = mongoose.Schema({
   id: {
     type: Number,
@@ -34,7 +39,6 @@ let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (allRepos) => {
   allRepos.forEach(repo => {
-    // console.log(repo.id);
     Repo.updateOne(repo, repo, { upsert: true, strict: false }, (err, update) => {
       if (err) {
         console.log('err', err);
